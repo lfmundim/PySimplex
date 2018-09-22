@@ -44,29 +44,38 @@ class Tableaux:
         extra = []
         for i in range(0, rules):
             aux = []
-            for j in range(0, variables):
+            for j in range(0, rules):
                 if(i==j):
-                    if(aux_matrix[i][variables] == '<='):
-                        aux.append(1)
-                    else:
+                    if(aux_matrix[i][variables] == '>='):
                         aux.append(-1)
+                    else:
+                        aux.append(1)
                 else:
                     aux.append(0)
             extra.append(aux)
         print 'Success: ', extra, '\n'
 
+        print 'Creating Tableaux Matrix'
         # Cria matriz de operacoes
         matrix = []
+        c_vector = []
+        for i in objective:
+            c_vector.append(i)
+        for i in range(0, len(extra)+1):
+            c_vector.append(0)
+        matrix.append(c_vector)            
+            
         for i in range(0, rules):
             aux_numbers = []
             for j in range(0, variables):
                 aux_numbers.append(int(aux_matrix[i][j]))
             
-            for j in range(0, variables):
+            for j in range(0, rules):
                 aux_numbers.append(int(extra[i][j]))
             aux_numbers.append(int(aux_matrix[i][-1]))
             matrix.append(aux_numbers)
-        
+        print 'Success:'
+
         self.variable_conditions = variable_conditions
         self.variables = variables
         self.rules = rules
@@ -75,34 +84,31 @@ class Tableaux:
         self.columns = len(matrix[0])
         self.lines = len(matrix)
         self.original = matrix
+        self.operations_matrix = matrix
+
+        self._print()
 
         # Transforma matriz em Fraction
-        for i in range(0, self.lines):
-            for j in range(0, self.columns):
-                self.matrix[i][j] = Fraction(self.matrix[i][j], 1)
+        # for i in range(0, self.lines):
+        #     for j in range(0, self.columns):
+        #         self.matrix[i][j] = Fraction(self.matrix[i][j], 1)
 
 
         # Inicializa matriz de operacoes
-        self.operations_matrix = np.zeros((self.variables, self.variables-1), dtype="object")
-        id_index_i = 1
-        id_index_j = 0
-        while id_index_j < self.variables-1:
-            self.operations_matrix[id_index_i][id_index_j] = 1
-            id_index_i += 1
-            id_index_j += 1    
-        # Transforma matriz de operacoes em fractions
-        for i in range(0, self.operations_matrix.shape[0]):
-            for j in range(0, self.operations_matrix.shape[1]):
-                self.operations_matrix[i][j] = Fraction(self.operations_matrix[i][j], 1)
+        # self.operations_matrix = np.zeros((self.variables, self.variables-1), dtype="object")
+        # id_index_i = 1
+        # id_index_j = 0
+        # while id_index_j < self.variables-1:
+        #     self.operations_matrix[id_index_i][id_index_j] = 1
+        #     id_index_i += 1
+        #     id_index_j += 1    
+        # # Transforma matriz de operacoes em fractions
+        # for i in range(0, self.operations_matrix.shape[0]):
+        #     for j in range(0, self.operations_matrix.shape[1]):
+        #         self.operations_matrix[i][j] = Fraction(self.operations_matrix[i][j], 1)
 
     def _print(self):
-        tableaux = np.concatenate((self.operations_matrix, self.matrix), axis=1)
-        for i in range(0, tableaux.shape[0]):
-            for j in range(0, tableaux.shape[1]):
-                sys.stdout.write("%4s" % np.format_float_positional(float(tableaux[i,j]), precision=5))
-                if(j != (tableaux.shape[1]-1)):
-                    sys.stdout.write(', ')
-            if(i != (tableaux.shape[0]-1)):
-                print("\n") 
-        print("\n") 
-        sys.stdout.flush()
+        np.set_printoptions(precision=3)
+        tableaux = self.matrix
+        print('\n'.join([''.join(['{:7}'.format(round(item, 2)) for item in row]) for row in tableaux]))
+        print '\n'

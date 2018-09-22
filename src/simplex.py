@@ -30,8 +30,8 @@ def aux_simplex(lp):
         for j in range(0, lp.columns):
             matrix[0][j] = matrix[0][j]-matrix[i][j]
     
-    simplex_return = simplex(lp, True)            
-    return simplex_return
+    simplex(lp, True)            
+    return lp
 
 
 def simplex(lp, aux):
@@ -147,7 +147,7 @@ def main():
         aux_tableaux = create_aux_tableaux()
         aux_response = aux_simplex(aux_tableaux)
         
-        if(aux_response<0):
+        if(aux_response.matrix[0][-1]<0):
             print 'Status: inviavel'
             print 'Certificado: '
             # printar certificado

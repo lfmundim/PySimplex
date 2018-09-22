@@ -15,23 +15,23 @@ class Tableaux:
     original = []
 
     def __init__(self, content):
-        print 'Reading file'
+        #print 'Reading file'
         # Pega quantidade de variaveis e restricoes
         variables = int(content[0])
         rules = int(content[1])
-        print 'File read'
+        #print 'File read'
 
-        print 'Getting non-neg conditions'
+        #print 'Getting non-neg conditions'
         # Pega condicoes de nao-negatividade
         condition_tokens = content[2].split(' ')
         variable_conditions = [int(i) for i in condition_tokens]
-        print 'Success: ', variable_conditions, '\n'
+        #print 'Success: ', variable_conditions, '\n'
 
-        print 'Getting objective function'
+        #print 'Getting objective function'
         # Pega funcao objetivo * -1
         objective_tokens = content[3].split(' ')
         objective = [int(i)*-1 for i in objective_tokens]
-        print 'Success: ', objective, '\n'
+        # print 'Success: ', objective, '\n'
 
         # Pega matriz de operacoes auxiliar (str)
         aux_matrix = []
@@ -39,7 +39,7 @@ class Tableaux:
             line_tokens = content[i].split(' ')
             aux_matrix.append(line_tokens)
 
-        print 'Generating Identity Matrix'
+        #print 'Generating Identity Matrix'
         # Cria identidade para FPI
         extra = []
         for i in range(0, rules):
@@ -53,9 +53,9 @@ class Tableaux:
                 else:
                     aux.append(0)
             extra.append(aux)
-        print 'Success: ', extra, '\n'
+        # print 'Success: ', extra, '\n'
 
-        print 'Creating Tableaux Matrix'
+        # print 'Creating Tableaux Matrix'
         # Cria matriz de operacoes
         matrix = []
         c_vector = []
@@ -74,7 +74,7 @@ class Tableaux:
                 aux_numbers.append(int(extra[i][j]))
             aux_numbers.append(int(aux_matrix[i][-1]))
             matrix.append(aux_numbers)
-        print 'Success:'
+        # print 'Success:'
 
         self.variable_conditions = variable_conditions
         self.variables = variables
@@ -86,7 +86,7 @@ class Tableaux:
         self.original = matrix
         self.operations_matrix = matrix
 
-        self._print()
+        # self._print()
 
     def _print(self):
         np.set_printoptions(precision=3)

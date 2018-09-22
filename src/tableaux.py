@@ -88,25 +88,6 @@ class Tableaux:
 
         self._print()
 
-        # Transforma matriz em Fraction
-        # for i in range(0, self.lines):
-        #     for j in range(0, self.columns):
-        #         self.matrix[i][j] = Fraction(self.matrix[i][j], 1)
-
-
-        # Inicializa matriz de operacoes
-        # self.operations_matrix = np.zeros((self.variables, self.variables-1), dtype="object")
-        # id_index_i = 1
-        # id_index_j = 0
-        # while id_index_j < self.variables-1:
-        #     self.operations_matrix[id_index_i][id_index_j] = 1
-        #     id_index_i += 1
-        #     id_index_j += 1    
-        # # Transforma matriz de operacoes em fractions
-        # for i in range(0, self.operations_matrix.shape[0]):
-        #     for j in range(0, self.operations_matrix.shape[1]):
-        #         self.operations_matrix[i][j] = Fraction(self.operations_matrix[i][j], 1)
-
     def _print(self):
         np.set_printoptions(precision=3)
         tableaux = self.matrix

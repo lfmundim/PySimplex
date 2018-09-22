@@ -23,9 +23,22 @@ def simplex(lp):
     print c_line
 
     while has_negative(c_line):
+    # for i in range(0,3): # Debug purposes
         column = get_negative_column(c_line)
-        pivoting(lp, column)
-        lp._print()
+        if(not_unlimited(lp, column)):
+            pivoting(lp, column)
+            lp._print()
+        else:
+            break
+
+def not_unlimited(lp, column):
+    matrix = lp.matrix
+    for i in range(1, lp.lines):
+        if matrix[i][column]>0:
+            return True
+    print 'Unlimited!'
+    return False
+
 
 def pivoting(lp, column):
     pivot = [1 for i in range(0, lp.columns-1)]
@@ -34,13 +47,14 @@ def pivoting(lp, column):
 
     # Escolhe linha pivot
     for i in range(1, lp.lines):
-        if(lp.matrix[i][column] == 0 or pivot[column] == 0):
+        if(lp.matrix[i][column] <= 0 or pivot[column] == 0):
             continue
         if(lp.matrix[i][-1]/lp.matrix[i][column] < pivot[-1]/pivot[column]):
             pivot = lp.matrix[i]
             pivot_index = i
 
-    print 'column ',column
+    # print 'column ',column
+    # print 'pivot ',pivot
     
     # Item pivo = 1
     divisor = pivot[column]

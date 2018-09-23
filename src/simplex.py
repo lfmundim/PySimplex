@@ -55,9 +55,20 @@ def simplex(lp, aux):
             return
     # print 'pv return ', pivoting_return
     if(not aux):
+        # Printa solucao do simplex otimo
         solution_string = ''
-        for i in range (0, lp.columns-1):
-            solution_string = solution_string+str(lp.matrix[0][i])+' '
+        for i in range (0, lp.variables):
+            temp = 0
+            line = 0
+            for j in range(1, lp.lines):
+                if lp.matrix[j][i] == 1 and line == 0:
+                    line = j
+                    temp = lp.matrix[j][-1]
+                elif lp.matrix[j][i] != 0 and line != 0:
+                    line = 0
+                    temp = 0
+            solution_string = solution_string+str(temp)+' '
+
         print 'Status: otimo'
         print 'Objetivo: ', lp.matrix[0][-1]
         print 'Solucao: '
@@ -126,12 +137,16 @@ def create_aux_tableaux():
     return aux_tableaux
 
 def read_file():
-    with open(sys.argv[1]) as f:
+    #with open(sys.argv[1]) as f:
+    with open('../tests/3b.txt') as f:
         content = f.readlines()
         
     tableaux = Tableaux(content)
     
     return tableaux
+
+#def generate_new_tableaux(lp):
+    
 
 def main():
     #print 'Starting'
@@ -152,6 +167,7 @@ def main():
             print 'Certificado: '
             # printar certificado
         else:
+            #generate_new_tableaux(aux_response)
             simplex(tableaux, False)
     else:
         simplex(tableaux, False)

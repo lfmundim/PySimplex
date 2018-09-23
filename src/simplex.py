@@ -82,7 +82,6 @@ def not_unlimited(lp, column):
     for i in range(1, lp.lines):
         if matrix[i][column]>0:
             return True
-    print 'Unlimited!'
     return False
 
 
@@ -137,8 +136,8 @@ def create_aux_tableaux():
     return aux_tableaux
 
 def read_file():
-    #with open(sys.argv[1]) as f:
-    with open('../tests/3b.txt') as f:
+    with open(sys.argv[1]) as f:
+    # with open('../tests/3b.txt') as f:
         content = f.readlines()
         
     tableaux = Tableaux(content)

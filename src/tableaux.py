@@ -30,7 +30,7 @@ class Tableaux:
         #print 'Getting objective function'
         # Pega funcao objetivo * -1
         objective_tokens = content[3].split(' ')
-        objective = [int(i)*-1 for i in objective_tokens]
+        objective = [float(i)*-1 for i in objective_tokens]
         # print 'Success: ', objective, '\n'
 
         # Pega matriz de operacoes auxiliar (str)
@@ -68,11 +68,11 @@ class Tableaux:
         for i in range(0, rules):
             aux_numbers = []
             for j in range(0, variables):
-                aux_numbers.append(int(aux_matrix[i][j]))
+                aux_numbers.append(float(aux_matrix[i][j]))
             
             for j in range(0, rules):
-                aux_numbers.append(int(extra[i][j]))
-            aux_numbers.append(int(aux_matrix[i][-1]))
+                aux_numbers.append(float(extra[i][j]))
+            aux_numbers.append(float(aux_matrix[i][-1]))
             matrix.append(aux_numbers)
         # print 'Success:'
 

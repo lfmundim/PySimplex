@@ -92,4 +92,4 @@ class Tableaux:
         np.set_printoptions(precision=3)
         tableaux = self.matrix
         print('\n'.join([''.join(['{:7}'.format(round(item, 2)) for item in row]) for row in tableaux]))
-        print '\n'
+        print ('\n')

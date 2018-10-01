@@ -49,8 +49,8 @@ def simplex(lp, aux):
             pivoting(lp, column)
             # lp._print()
         else:
-            print 'Status: ilimitado'
-            print 'Certificado:'
+            print ('Status: ilimitado')
+            print ('Certificado:')
             # printar certificado
             return
     # print 'pv return ', pivoting_return
@@ -69,11 +69,11 @@ def simplex(lp, aux):
                     temp = 0
             solution_string = solution_string+str(temp)+' '
 
-        print 'Status: otimo'
-        print 'Objetivo: ', lp.matrix[0][-1]
-        print 'Solucao: '
-        print solution_string
-        print 'Certificado:'
+        print ('Status: otimo')
+        print ('Objetivo: ', lp.matrix[0][-1])
+        print ('Solucao: ')
+        print (solution_string)
+        print ('Certificado:')
         #printar certificado
     return
 
@@ -162,8 +162,8 @@ def main():
         aux_response = aux_simplex(aux_tableaux)
         
         if(aux_response.matrix[0][-1]<0):
-            print 'Status: inviavel'
-            print 'Certificado: '
+            print ('Status: inviavel')
+            print ('Certificado: ')
             # printar certificado
         else:
             #generate_new_tableaux(aux_response)

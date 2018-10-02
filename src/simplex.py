@@ -10,22 +10,18 @@ def has_negative(line):
     return False
 
 def get_negative_column(line):
-    # print(line)
     for i in range(0, len(line)):
         if line[i]<0:
             return i
 
 def aux_simplex(lp):
     matrix = lp.matrix
-    # lp._print()
     # Positiva a identidade
     for i in range(1, lp.lines):
         for j in range(0, lp.columns):
             if matrix[0][j] == 1 and matrix[i][j] == -1:
                 matrix[i][j] = float(1)
 
-    # print ('AQUI DIAXO')
-    # lp._print()
     # Zera colunas canonicas
     lines = []
     for i in range(0, lp.columns):
@@ -38,36 +34,27 @@ def aux_simplex(lp):
         for j in range(0, lp.columns):
             if i in lines:
                 matrix[0][j] = matrix[0][j]-matrix[i][j]
+
     lp.matrix = matrix
-    # lp._print()
-    simplex(lp, True)      
-    # lp._print()      
+    simplex(lp, True)       
     return lp
 
 
 def simplex(lp, aux):
-    # print('simplex')
     matrix = lp.matrix
-    # print 'Matrix:'
-    # lp._print()
 
     c_line = matrix[0]
-    # print c_line
-    # lp._print()
+    # Pivoteia
     while has_negative(c_line):
-    # for i in range(0,3): # Debug purposes
         column = get_negative_column(c_line)
-        # print('Negative: ', column)
+        # Verifica se é ilimitada
         if(not_unlimited(lp, column)):
             pivoting(lp, column)
-            # lp._print()
         else:
             print ('Status: ilimitado')
             print ('Certificado:')
             # printar certificado
             return
-        # lp._print()
-    # print 'pv return ', pivoting_return
     if(not aux):
         # Printa solucao do simplex otimo
         solution_string = ''
@@ -111,9 +98,6 @@ def pivoting(lp, column):
         if(lp.matrix[i][-1]/lp.matrix[i][column] < pivot[-1]/pivot[column]):
             pivot = lp.matrix[i]
             pivot_index = i
-
-    # print 'column ',column
-    # print 'pivot ',pivot
     
     # Item pivo = 1
     divisor = pivot[column]
@@ -130,51 +114,46 @@ def pivoting(lp, column):
             lp.matrix[i][j] = lp.matrix[i][j]+abs*pivot[j]
         
         lp.matrix[pivot_index] = pivot
-    # print 'final ', lp.matrix[0][-1]
 
 def create_aux_tableaux():
     aux_tableaux = read_file()
-    # print(aux_tableaux.aux_tableau_negatives)
     # C Line
+    # Preenche linha com 0's 
     for i in range(0, aux_tableaux.variables):
         aux_tableaux.matrix[0][i] = 0
+    # Coloca 1's nas colunas identidades
     for i in range(0, aux_tableaux.aux_tableau_negatives+1):
         aux_tableaux.matrix[0][-i-1] = 1
     aux_tableaux.matrix[0][-1] = 0
 
+    # Multiplica linhas com resultado negativo por -1
     for i in range(1, aux_tableaux.lines):
         if aux_tableaux.matrix[i][-1] < 0:
             for j in range(0, aux_tableaux.columns):
                 aux_tableaux.matrix[i][j] = aux_tableaux.matrix[i][j]*-1
-    # aux_tableaux._print()
+
     return aux_tableaux
 
 def read_file():
     with open(sys.argv[1]) as f:
-    # with open('../tests/3b.txt') as f:
         content = f.readlines()
         
     tableaux = Tableaux(content)
     
-    return tableaux
-
-#def generate_new_tableaux(lp):
-    
+    return tableaux    
 
 def main():
-    #print 'Starting'
     np.set_printoptions(precision=3)
     tableaux = read_file()
 
     need_aux = True
-    for i in range(0, tableaux.lines):
-        if tableaux.matrix[i][-1] < 0:
-            need_aux = True
+    # Rodar aux pra todas
+    # for i in range(0, tableaux.lines):
+    #     if tableaux.matrix[i][-1] < 0:
+    #         need_aux = True
 
     if(need_aux):
         aux_tableaux = create_aux_tableaux()
-        # print('aqui')
-        # aux_tableaux._print()
         aux_response = aux_simplex(aux_tableaux)
         
         if(aux_response.matrix[0][-1]<0):
@@ -182,7 +161,6 @@ def main():
             print ('Certificado: ')
             # printar certificado
         else:
-            #generate_new_tableaux(aux_response)
             simplex(tableaux, False)
     else:
         simplex(tableaux, False)

@@ -23,16 +23,37 @@ class Tableaux:
         # Pega condicoes de nao-negatividade
         condition_tokens = content[2].split(' ')
         variable_conditions = [int(i) for i in condition_tokens]
-
         # Pega funcao objetivo * -1
         objective_tokens = content[3].split(' ')
-        objective = [float(i)*-1 for i in objective_tokens]
+
+        objective = []
+
+        if 0 not in variable_conditions:
+            objective = [float(i)*-1 for i in objective_tokens]
+        else:
+            for i in range(0, len(objective_tokens)):
+                if variable_conditions[i] == 0:
+                    objective.append(float(objective_tokens[i]))
+                    objective.append(float(objective_tokens[i])*-1)
+                else:
+                    objective.append(float(i*-1))
 
         # Pega matriz de operacoes auxiliar (str)
         aux_matrix = []
-        for i in range (4, 4+rules):
-            line_tokens = content[i].split(' ')
-            aux_matrix.append(line_tokens)
+        if 0 not in variable_conditions:
+            for i in range (4, 4+rules):
+                line_tokens = content[i].split(' ')
+                aux_matrix.append(line_tokens)
+        else:
+            line_tokens = []
+            for i in range (4, 4+rules):
+                temp = content[i].split(' ')
+                # -2 pq valor final e sinal
+                for j in range(0, len(temp)-2):
+                    line_tokens.append(float(temp[j]))
+                    if variable_conditions[j] == 0:
+                        line_tokens.append(float(temp[j])*-1)
+                aux_matrix.append(line_tokens)
 
         # Cria identidade para FPI
         extra = []
@@ -41,7 +62,7 @@ class Tableaux:
             aux = []
             for j in range(0, rules):
                 if(i==j):
-                    if(aux_matrix[i][variables] == '>='):
+                    if(aux_matrix[i][-2] == '>='):
                         aux.append(-1)
                     else:
                         aux.append(1)
@@ -73,9 +94,9 @@ class Tableaux:
             c_vector.append(0)
         matrix.append(c_vector)            
 
-        for i in range(0, rules):
+        for i in range(0, len(aux_matrix)):
             aux_numbers = []
-            for j in range(0, variables):
+            for j in range(0, len(aux_matrix[0])-2):
                 aux_numbers.append(float(aux_matrix[i][j]))
             
             for j in range(0, len(extra)):

@@ -21,7 +21,7 @@ def aux_simplex(lp):
         for j in range(0, lp.columns):
             if matrix[0][j] == 1 and matrix[i][j] == -1:
                 matrix[i][j] = float(1)
-
+    # lp._print()
     # Zera colunas canonicas
     lines = []
     for i in range(0, lp.columns):
@@ -36,20 +36,29 @@ def aux_simplex(lp):
                 matrix[0][j] = matrix[0][j]-matrix[i][j]
 
     lp.matrix = matrix
-    simplex(lp, True)       
+    print('inicio')
+    lp._print()
+    print('fim')   
+    out = simplex(lp, True)  
+    print('saida aux1')
+    out._print()  
     return lp
 
 
 def simplex(lp, aux):
     matrix = lp.matrix
-
+    # lp._print()
     c_line = matrix[0]
     # Pivoteia
+    if(aux):
+        print('aux')
+        lp._print()
     while has_negative(c_line):
+        # lp._print()
         column = get_negative_column(c_line)
         # Verifica se é ilimitada
         if(not_unlimited(lp, column)):
-            pivoting(lp, column)
+            lp = pivoting(lp, column)
         else:
             print ('Status: ilimitado')
             print ('Certificado:')
@@ -76,7 +85,7 @@ def simplex(lp, aux):
         print (solution_string)
         print ('Certificado:')
         #printar certificado
-    return
+    return lp
 
 def not_unlimited(lp, column):
     matrix = lp.matrix
@@ -114,6 +123,7 @@ def pivoting(lp, column):
             lp.matrix[i][j] = lp.matrix[i][j]+abs*pivot[j]
         
         lp.matrix[pivot_index] = pivot
+    return lp
 
 def create_aux_tableaux():
     aux_tableaux = read_file()
@@ -135,7 +145,7 @@ def create_aux_tableaux():
     return aux_tableaux
 
 def read_file():
-    with open(sys.argv[1]) as f:
+    with open(sys.argv[1], 'r') as f:
         content = f.readlines()
         
     tableaux = Tableaux(content)
@@ -145,7 +155,7 @@ def read_file():
 def main():
     np.set_printoptions(precision=3)
     tableaux = read_file()
-
+    # tableaux._print()
     need_aux = True
     # Rodar aux pra todas
     # for i in range(0, tableaux.lines):
@@ -155,7 +165,8 @@ def main():
     if(need_aux):
         aux_tableaux = create_aux_tableaux()
         aux_response = aux_simplex(aux_tableaux)
-        
+        print('saida da aux')
+        aux_response._print()
         if(aux_response.matrix[0][-1]<0):
             print ('Status: inviavel')
             print ('Certificado: ')

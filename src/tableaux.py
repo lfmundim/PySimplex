@@ -13,6 +13,7 @@ class Tableaux:
     objective = []    
     operations_matrix = []
     original = []
+    aux_tableau_negatives = 0
 
     def __init__(self, content):
         #print 'Reading file'
@@ -42,6 +43,7 @@ class Tableaux:
         #print 'Generating Identity Matrix'
         # Cria identidade para FPI
         extra = []
+        geq_rows = []
         for i in range(0, rules):
             aux = []
             for j in range(0, rules):
@@ -50,11 +52,28 @@ class Tableaux:
                         aux.append(-1)
                     else:
                         aux.append(1)
+                    geq_rows.append(i)
                 else:
                     aux.append(0)
             extra.append(aux)
-        # print 'Success: ', extra, '\n'
 
+
+        if(len(geq_rows)>0):
+            self.aux_tableau_negatives = len(geq_rows)
+            for i in range(0, len(geq_rows)):
+                aux = []
+                for j in range(0, rules):
+                    if(geq_rows[i]==j):
+                        aux.append(1)
+                    else:
+                        aux.append(0)    
+                    # else:
+                    #     aux.append(0)
+                extra.append(aux)
+                # print(extra)
+        # print 'Success: ', extra, '\n'
+        else:
+            self.aux_tableau_negatives = variables
         # print 'Creating Tableaux Matrix'
         # Cria matriz de operacoes
         matrix = []
@@ -64,14 +83,14 @@ class Tableaux:
         for i in range(0, len(extra)+1):
             c_vector.append(0)
         matrix.append(c_vector)            
-            
+
         for i in range(0, rules):
             aux_numbers = []
             for j in range(0, variables):
                 aux_numbers.append(float(aux_matrix[i][j]))
             
-            for j in range(0, rules):
-                aux_numbers.append(float(extra[i][j]))
+            for j in range(0, len(extra)):
+                aux_numbers.append(float(extra[j][i]))
             aux_numbers.append(float(aux_matrix[i][-1]))
             matrix.append(aux_numbers)
         # print 'Success:'

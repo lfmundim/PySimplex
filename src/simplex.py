@@ -3,9 +3,12 @@ import sys
 from tableaux import Tableaux
 import numpy as np
 
-def has_negative(line):
-    for i in range (0, len(line)-1):
-        if line[i]<0:
+def has_negative(line, lp):
+    # for i in range (0, len(line)-1):
+    for i in range (0, len(line)-1-lp.aux_tableau_negatives):
+        if np.round(line[i])<0:
+            # print('aqui')
+            # lp._print()
             return True
     return False
 
@@ -29,7 +32,7 @@ def aux_simplex(lp):
             for j in range(0, lp.lines):
                 if matrix[j][i] == 1:
                     lines.append(j)
-
+    # lp._print()
     for i in range(1, lp.lines):
         for j in range(0, lp.columns):
             if i in lines:
@@ -45,16 +48,23 @@ def simplex(lp, aux):
 
     c_line = matrix[0]
     # Pivoteia
-    while has_negative(c_line):
+    while has_negative(c_line, lp):
+    # for i in range(0, 2):
+        # lp._print()
         column = get_negative_column(c_line)
         # Verifica se é ilimitada
         if(not_unlimited(lp, column)):
-            pivoting(lp, column)
+            lp = pivoting(lp, column)
+            # print(lp.matrix[0])
+            if(aux):
+                lp._print()
         else:
+            lp._print()
             print ('Status: ilimitado')
             print ('Certificado:')
             # printar certificado
             return
+    # lp._print()
     if(not aux):
         # Printa solucao do simplex otimo
         solution_string = ''
@@ -114,6 +124,9 @@ def pivoting(lp, column):
             lp.matrix[i][j] = lp.matrix[i][j]+abs*pivot[j]
         
         lp.matrix[pivot_index] = pivot
+    # print('Pivoting')
+    # lp._print()
+    return lp
 
 def create_aux_tableaux():
     aux_tableaux = read_file()
@@ -154,13 +167,18 @@ def main():
 
     if(need_aux):
         aux_tableaux = create_aux_tableaux()
+        #aux_tableaux._print()
         aux_response = aux_simplex(aux_tableaux)
-        
+        print('Fim AUX')
         if(aux_response.matrix[0][-1]<0):
             print ('Status: inviavel')
             print ('Certificado: ')
             # printar certificado
         else:
+            for i in range(1, aux_response.lines):
+                tableaux.matrix[i] = aux_response.matrix[i]
+            print('substituido')
+            tableaux._print()
             simplex(tableaux, False)
     else:
         simplex(tableaux, False)

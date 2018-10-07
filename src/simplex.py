@@ -55,14 +55,12 @@ def simplex(lp, aux):
         # Verifica se é ilimitada
         if(not_unlimited(lp, column)):
             lp = pivoting(lp, column)
-            # print(lp.matrix[0])
-            if(aux):
-                lp._print()
         else:
-            lp._print()
-            print ('Status: ilimitado')
-            print ('Certificado:')
-            # printar certificado
+            f = open("out.txt", "w+")
+            f.write ('Status: ilimitado\n')
+            f.write ('Certificado:\n')
+            f.write ("\n")
+            f.close ()
             return
     # lp._print()
     if(not aux):
@@ -79,13 +77,14 @@ def simplex(lp, aux):
                     line = 0
                     temp = 0
             solution_string = solution_string+str(temp)+' '
-
-        print ('Status: otimo')
-        print ('Objetivo: ', lp.matrix[0][-1])
-        print ('Solucao: ')
-        print (solution_string)
-        print ('Certificado:')
-        #printar certificado
+        f = open("out.txt", "w+")
+        f.write ('Status: otimo\n')
+        f.write ('Objetivo: %d\n' % lp.matrix[0][-1])
+        f.write ('Solucao: \n')
+        f.write (solution_string)
+        f.write ('\nCertificado:\n')
+        f.write ("\n")
+        f.close()
     return
 
 def not_unlimited(lp, column):
@@ -117,11 +116,13 @@ def pivoting(lp, column):
     # Pivoteamento
     for i in range(0, lp.lines):    
         abs = lp.matrix[i][column]*-1
-
-        if(lp.matrix[i][column]==0 or i == pivot_index):
-            continue
-        for j in range(0, lp.columns):
-            lp.matrix[i][j] = lp.matrix[i][j]+abs*pivot[j]
+        if(lp.matrix[i][column]!=0 and i != pivot_index):
+            for j in range(0, lp.columns):
+                # if(j==3):
+                    # print('Valor ', lp.matrix[i][j])
+                    # print('Linha ', i)
+                    # print(lp.matrix[i][j],'=',lp.matrix[i][j],'+',abs,'*',pivot[j])
+                lp.matrix[i][j] = lp.matrix[i][j]+abs*pivot[j]
         
         lp.matrix[pivot_index] = pivot
     # print('Pivoting')
@@ -169,16 +170,17 @@ def main():
         aux_tableaux = create_aux_tableaux()
         #aux_tableaux._print()
         aux_response = aux_simplex(aux_tableaux)
-        print('Fim AUX')
+        # print('Fim AUX')
         if(aux_response.matrix[0][-1]<0):
-            print ('Status: inviavel')
-            print ('Certificado: ')
+            f = open("out.txt", "w+")
+            f.write ('Status: inviavel\n')
+            f.write ('Certificado: \n')
+            f.write ("\n")
+            f.close ()
             # printar certificado
         else:
             for i in range(1, aux_response.lines):
                 tableaux.matrix[i] = aux_response.matrix[i]
-            print('substituido')
-            tableaux._print()
             simplex(tableaux, False)
     else:
         simplex(tableaux, False)

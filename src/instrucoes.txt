@@ -1,0 +1,4 @@
+Para execução:
+python3 simplex.py <arquivo_de_entrada.txt>
+
+A saída será impressa em um arquivo chamado "out.txt"
